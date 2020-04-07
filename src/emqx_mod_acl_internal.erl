@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -101,6 +101,12 @@ rules_from_file(AclFile) ->
             Rules = [emqx_access_rule:compile(Term) || Term <- Terms],
             #{publish   => [Rule || Rule <- Rules, filter(publish, Rule)],
               subscribe => [Rule || Rule <- Rules, filter(subscribe, Rule)]};
+        {error, eacces} ->
+            ?LOG(alert, "Insufficient permissions to read the ~s file", [AclFile]),
+            #{};
+        {error, enoent} ->
+            ?LOG(alert, "The ~s file does not exist", [AclFile]),
+            #{};
         {error, Reason} ->
             ?LOG(alert, "Failed to read ~s: ~p", [AclFile, Reason]),
             #{}

@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ t_subopts(_) ->
     ?assertEqual(undefined, emqx_broker:get_subopts(self(), <<"topic">>)),
     ?assertEqual(undefined, emqx_broker:get_subopts(<<"clientid">>, <<"topic">>)),
     emqx_broker:subscribe(<<"topic">>, <<"clientid">>, #{qos => 1}),
+    timer:sleep(200),
     ?assertEqual(#{qos => 1, subid => <<"clientid">>}, emqx_broker:get_subopts(self(), <<"topic">>)),
     ?assertEqual(#{qos => 1, subid => <<"clientid">>}, emqx_broker:get_subopts(<<"clientid">>,<<"topic">>)),
     emqx_broker:subscribe(<<"topic">>, <<"clientid">>, #{qos => 2}),
@@ -89,6 +90,7 @@ t_subscribers(_) ->
 
 t_subscriptions(_) ->
     emqx_broker:subscribe(<<"topic">>, <<"clientid">>, #{qos => 1}),
+    ok = timer:sleep(100),
     ?assertEqual(#{qos => 1, subid => <<"clientid">>},
                  proplists:get_value(<<"topic">>, emqx_broker:subscriptions(self()))),
     ?assertEqual(#{qos => 1, subid => <<"clientid">>},

@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_time_SUITE).
+-module(emqx_global_gc_SUITE).
 
 -compile(export_all).
 -compile(nowarn_export_all).
@@ -23,11 +23,11 @@
 
 all() -> emqx_ct:all(?MODULE).
 
-t_seed(_) ->
-    ?assert(is_tuple(emqx_time:seed())).
+t_run_gc(_) ->
+    ok = application:set_env(emqx, global_gc_interval, 1),
+    {ok, _} = emqx_global_gc:start_link(),
+    ok = timer:sleep(1500),
+    {ok, MilliSecs} = emqx_global_gc:run(),
+    ct:print("Global GC: ~w(ms)~n", [MilliSecs]),
+    emqx_global_gc:stop().
 
-t_now_secs(_) ->
-    ?assert(emqx_time:now_secs() =< emqx_time:now_secs(os:timestamp())).
-
-t_now_ms(_) ->
-    ?assert(emqx_time:now_ms() =< emqx_time:now_ms(os:timestamp())).

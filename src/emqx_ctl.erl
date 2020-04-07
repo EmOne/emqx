@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ run_command(Cmd, Args) when is_atom(Cmd) ->
                 _ -> ok
             catch
                 _:Reason:Stacktrace ->
-                    ?ERROR("CMD Error:~p, Stacktrace:~p", [Reason, Stacktrace]),
+                    ?ERROR("CMD Error:~0p, Stacktrace:~0p", [Reason, Stacktrace]),
                     {error, Reason}
             end;
         [] ->

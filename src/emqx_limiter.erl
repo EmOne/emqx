@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -37,8 +37,7 @@
 
 -spec(init(proplists:proplist()) -> maybe(limiter())).
 init(Options) ->
-    Zone = proplists:get_value(zone, Options),
-    Pl = emqx_zone:publish_limit(Zone),
+    Pl = proplists:get_value(pub_limit, Options),
     Rl = proplists:get_value(rate_limit, Options),
     case ?ENABLED(Pl) or ?ENABLED(Rl) of
         true  -> #limiter{pub_limit  = init_limit(Pl),

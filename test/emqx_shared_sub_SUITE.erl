@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ init_per_suite(Config) ->
 
 end_per_suite(_Config) ->
     emqx_ct_helpers:stop_apps([]).
-    
+
 t_is_ack_required(_) ->
     ?assertEqual(false, emqx_shared_sub:is_ack_required(#message{headers = #{}})).
 
@@ -293,3 +293,4 @@ recv_msgs(Count, Msgs) ->
     after 100 ->
         Msgs
     end.
+

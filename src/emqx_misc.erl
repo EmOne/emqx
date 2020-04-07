@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@
 
 -export([ merge_opts/2
         , maybe_apply/2
+        , compose/1
+        , compose/2
         , run_fold/3
         , pipeline/3
         , start_timer/2
@@ -56,10 +58,18 @@ merge_opts(Defaults, Options) ->
 %% @doc Apply a function to a maybe argument.
 -spec(maybe_apply(fun((maybe(A)) -> maybe(A)), maybe(A))
       -> maybe(A) when A :: any()).
-maybe_apply(_Fun, undefined) ->
-    undefined;
+maybe_apply(_Fun, undefined) -> undefined;
 maybe_apply(Fun, Arg) when is_function(Fun) ->
     erlang:apply(Fun, [Arg]).
+
+-spec(compose(list(F)) -> G when F :: fun((any()) -> any()),
+                                 G :: fun((any()) -> any())).
+compose([F|More]) -> compose(F, More).
+
+-spec(compose(fun((X) -> Y), fun((Y) -> Z)) -> fun((X) -> Z)).
+compose(F, G) when is_function(G) -> fun(X) -> G(F(X)) end;
+compose(F, [G]) -> compose(F, G);
+compose(F, [G|More]) -> compose(compose(F, G), More).
 
 %% @doc RunFold
 run_fold([], Acc, _State) ->
@@ -72,7 +82,7 @@ pipeline([], Input, State) ->
     {ok, Input, State};
 
 pipeline([Fun|More], Input, State) ->
-    try apply_fun(Fun, Input, State) of
+    case apply_fun(Fun, Input, State) of
         ok -> pipeline(More, Input, State);
         {ok, NState} ->
             pipeline(More, Input, NState);
@@ -82,11 +92,6 @@ pipeline([Fun|More], Input, State) ->
             {error, Reason, State};
         {error, Reason, NState} ->
             {error, Reason, NState}
-    catch
-        Error:Reason:Stacktrace ->
-            ?LOG(error, "pipeline ~p failed: ~p,\nstacktrace: ~0p",
-                [{Fun, Input, State}, {Error, Reason}, Stacktrace]),
-            {error, Reason, State}
     end.
 
 -compile({inline, [apply_fun/3]}).

@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@
              , subopts/0
              , reason_code/0
              , alias_id/0
+             , topic_aliases/0
              , properties/0
              ]).
 
@@ -124,6 +125,7 @@
 -type(clientinfo() :: #{zone         := zone(),
                         protocol     := protocol(),
                         peerhost     := peerhost(),
+                        sockport     := non_neg_integer(),
                         clientid     := clientid(),
                         username     := username(),
                         peercert     := esockd_peercert:peercert(),
@@ -164,6 +166,8 @@
 -type(reason_code() :: 0..16#FF).
 -type(packet_id() :: 1..16#FFFF).
 -type(alias_id() :: 0..16#FFFF).
+-type(topic_aliases() :: #{inbound => maybe(map()),
+                           outbound => maybe(map())}).
 -type(properties() :: #{atom() => term()}).
 -type(topic_filters() :: list({topic(), subopts()})).
 -type(packet() :: #mqtt_packet{}).
@@ -176,8 +180,8 @@
 -type(deliver() :: {deliver, topic(), message()}).
 -type(delivery() :: #delivery{}).
 -type(deliver_result() :: ok | {error, term()}).
--type(publish_result() :: [ {node(), topic(), deliver_result()}
-                          | {share, topic(), deliver_result()}]).
+-type(publish_result() :: [{node(), topic(), deliver_result()} |
+                           {share, topic(), deliver_result()}]).
 -type(route() :: #route{}).
 -type(sub_group() :: tuple() | binary()).
 -type(route_entry() :: {topic(), node()} | {topic, sub_group()}).

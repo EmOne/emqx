@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 -export([ schedulers/0
         , scheduler_usage/1
-        , microsecs/0
         , system_info_keys/0
         , get_system_info/0
         , get_system_info/1
@@ -170,10 +169,6 @@
 
 schedulers() ->
     erlang:system_info(schedulers).
-
-microsecs() ->
-    {Mega, Sec, Micro} = os:timestamp(),
-    (Mega * 1000000 + Sec) * 1000000 + Micro.
 
 loads() ->
     [{load1,  ftos(avg1()/256)},

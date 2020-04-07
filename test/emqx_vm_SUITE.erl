@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -94,9 +94,6 @@ t_scheduler_usage(_Config) ->
 
 t_get_memory(_Config) ->
     emqx_vm:get_memory().
-
-t_microsecs(_Config) ->
-    emqx_vm:microsecs().
 
 t_schedulers(_Config) ->
     emqx_vm:schedulers().

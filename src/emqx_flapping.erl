@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ handle_cast({detected, #flapping{clientid   = ClientId,
         true -> %% Flapping happened:(
             ?LOG(error, "Flapping detected: ~s(~s) disconnected ~w times in ~wms",
                  [ClientId, inet:ntoa(PeerHost), DetectCnt, Duration]),
-            Now = erlang:system_time(millisecond),
+            Now = erlang:system_time(second),
             Banned = #banned{who    = {clientid, ClientId},
                              by     = <<"flapping detector">>,
                              reason = <<"flapping is detected">>,

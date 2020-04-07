@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2019 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -165,7 +165,7 @@ safe_execute(Fun, Args) ->
         Result -> Result
     catch
         _:Reason:Stacktrace ->
-            ?LOG(error, "Failed to execute ~p(~p): ~p", [Fun, Args, {Reason, Stacktrace}]),
+            ?LOG(error, "Failed to execute ~0p: ~0p", [Fun, {Reason, Stacktrace}]),
             ok
     end.
 
